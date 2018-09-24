@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм» [![Build status][travis-image]][travis-url]
 
 * Студент: [Григорий Андриевский](https://up.htmlacademy.ru/nodejs/2/user/219791).
-* Наставник: `Неизвестно`.
+* Наставник: [Дмитрий Мирошниченко] (https://htmlacademy.ru/profile/id591417).
 
 ---
 
