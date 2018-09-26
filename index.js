@@ -6,17 +6,14 @@ const commandList = {
 const errorMessage = msg => `Неизвестная команда ${msg}. Чтобы прочитать правила использования приложения, наберите "--help"`;
 const command = process.argv[2];
 
-let responseMessage, responseCode = 0, response = console.log;
-
 if (!command) {
-  responseMessage = 'Привет пользователь!\nЭта программа будет запускать сервер "Kekstagram".\nАвтор: Grigoriy Andrievskiy.';
+  console.log('Привет пользователь!\nЭта программа будет запускать сервер "Kekstagram".\nАвтор: Grigoriy Andrievskiy.');
+  process.exit(0);
 } else if (commandList[command]) {
-  responseMessage = commandList[command];
+  console.log(commandList[command]);
+  process.exit(0);
 } else {
-  response = console.error;
-  responseMessage = errorMessage(command);
-  responseCode = 1;
+  console.error(errorMessage(command));
+  process.exit(1);
 }
 
-response(responseMessage);
-process.exit(responseCode);
