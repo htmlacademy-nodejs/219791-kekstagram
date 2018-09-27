@@ -1,0 +1,25 @@
+{
+  "name": "nodekekstagram",
+  "version": "0.0.1",
+  "description": "learn project",
+  "main": "index.js",
+  "scripts": {
+    "test": "eslint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GregoryAndrievskiy/219791-kekstagram-1.git"
+  },
+  "author": "Grigoriy Andrievskiy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GregoryAndrievskiy/219791-kekstagram-1/issues"
+  },
+  "homepage": "https://github.com/GregoryAndrievskiy/219791-kekstagram-1#readme",
+  "dependencies": {
+    "eslint": "^5.6.0"
+  },
+  "devDependencies": {
+    "eslint-config-htmlacademy": "0.5.2"
+  }
+}
