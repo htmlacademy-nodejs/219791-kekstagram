@@ -1,21 +1,26 @@
 'use strict';
 
-const commandList = {
-  '--version': `v0.0.2`,
-  '--help': `Доступные команды:\n--help    —view help;\n--version —view app version;`,
-};
+const version = require(`./commands/version.js`);
+const help = require(`./commands/help.js`);
+const error = require(`./commands/error.js`);
+const empty = require(`./commands/empty.js`);
+const license = require(`./commands/license.js`);
+const description = require(`./commands/description.js`);
 
-const errorMessage = (msg) => `Неизвестная команда ${msg}. Чтобы прочитать правила использования приложения, наберите "--help"`;
+const commandList = [version, help, license, description].reduce((accum, module) => {
+  accum[`--${module.name}`] = module;
+  return accum;
+}, {});
+
 const command = process.argv[2];
 
 if (!command) {
-  console.log(`Привет пользователь!\nЭта программа будет запускать сервер "Kekstagram".\nАвтор: Grigoriy Andrievskiy.`);
+  empty.execute(command);
   process.exit(0);
 } else if (commandList[command]) {
-  console.log(commandList[command]);
+  commandList[command].execute();
   process.exit(0);
 } else {
-  console.error(errorMessage(command));
+  error.execute(command);
   process.exit(1);
 }
-
