@@ -16,10 +16,9 @@
     "url": "https://github.com/GregoryAndrievskiy/219791-kekstagram-1/issues"
   },
   "homepage": "https://github.com/GregoryAndrievskiy/219791-kekstagram-1#readme",
-  "dependencies": {
-    "eslint": "^5.6.0"
-  },
+  "dependencies": {},
   "devDependencies": {
+    "eslint": "5.6.1",
     "eslint-config-htmlacademy": "0.5.2"
   }
 }
