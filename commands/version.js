@@ -6,6 +6,7 @@ module.exports = {
   name: `version`,
   description: `Shows program version`,
   execute() {
-    console.log(`${packageJSON.version.slice(0, 1).red}.${packageJSON.version.slice(2, 3).green}.${packageJSON.version.slice(4, 5).blue}`);
+    const version = packageJSON.version.split(`.`);
+    console.log(`${version[0].red}.${version[1].green}.${version[2].blue}`);
   }
 };

@@ -10,15 +10,16 @@ const license = require(`./commands/license.js`);
 const description = require(`./commands/description.js`);
 
 const commandList = {version, help, license, description};
-const command = process.argv[2];
+let command = process.argv[2];
+command = (command.slice(0, 2) === `--`) ? command.slice(2) : command;
 
 if (!command) {
   empty.execute();
   process.exit(0);
-} else if (commandList[command.substring(2)]) {
-  commandList[command.substring(2)].execute();
+} else if (commandList[command]) {
+  commandList[command].execute();
   process.exit(0);
 } else {
-  error.execute(command);
+  error.execute(process.argv[2]);
   process.exit(1);
 }
