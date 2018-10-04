@@ -34,7 +34,7 @@ module.exports = () => {
   };
 
   const getRandomDescription = () => {
-    let maxLength = getRandom(0, MAX_TEXT_LENGTH);
+    const maxLength = getRandom(0, MAX_TEXT_LENGTH);
     let description = ``;
     let word = ` `;
     while ((description.length + word.length) <= maxLength) {
@@ -45,7 +45,7 @@ module.exports = () => {
   };
 
   const getRandomComments = () => {
-    let comments = [];
+    const comments = [];
     for (let i = 0; i < getRandom(0, MAX_COMMENTS_NUMBER); i++) {
       comments.push(getRandomDescription());
     }
