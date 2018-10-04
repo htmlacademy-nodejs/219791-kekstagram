@@ -1,6 +1,8 @@
 'use strict';
 
 module.exports = () => {
+  const WEEK = 7 * 24 * 60 * 60 * 1000;
+
   const MIN_TAG_LENGTH = 2;
   const MAX_TAG_LENGTH = 20;
   const MAX_TAGS_NUMBER = 5;
@@ -48,10 +50,8 @@ module.exports = () => {
       comments.push(getRandomDescription());
     }
     return comments;
-  }
+  };
 
-
-  const week = 7 * 24 * 60 * 60 * 1000;
   return {
     url: `https://picsum.photos/600/?random`,
     scale: getRandom(0, 100),
@@ -60,6 +60,6 @@ module.exports = () => {
     description: getRandomDescription(),
     likes: getRandom(0, 1000),
     comments: getRandomComments(),
-    date: Date.now() - getRandom(0, week)
+    date: Date.now() - getRandom(0, WEEK)
   };
 };
