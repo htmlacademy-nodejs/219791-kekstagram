@@ -9,13 +9,15 @@ const empty = require(`./commands/empty.js`);
 const license = require(`./commands/license.js`);
 const description = require(`./commands/description.js`);
 
+const fileCreator = require(`./fileCreator.js`);
+
 const commandList = {version, help, license, description};
 let command = process.argv[2];
-command = (command.slice(0, 2) === `--`) ? command.slice(2) : command;
+command = (command && command.slice(0, 2) === `--`) ? command.slice(2) : command;
 
 if (!command) {
   empty.execute();
-  process.exit(0);
+  fileCreator.create();
 } else if (commandList[command]) {
   commandList[command].execute();
   process.exit(0);
