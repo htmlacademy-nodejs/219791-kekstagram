@@ -7,5 +7,6 @@ module.exports = {
   description: `Shows program description`,
   execute() {
     console.log(`${packageJSON.description}`.green);
+    process.exit(0);
   }
 };

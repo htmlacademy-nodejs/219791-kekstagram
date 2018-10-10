@@ -36,7 +36,6 @@ module.exports = {
         rl.close();
         this.generate(line);
       } else if (line === 0) {
-
         console.log(`Was generated 0 entities`);
         process.exit(0);
       } else {
@@ -74,8 +73,8 @@ module.exports = {
     rl.setPrompt(`Enter file name: `);
     rl.prompt();
     rl.on(`line`, (line) => {
-      fs.readFile(`${savePath}/${line}.json`, (err) => {
-        if (err) {
+      fs.open(`${savePath}/${line}.json`, (err) => {
+        if (err.code === `EEXIST`) {
           rl.close();
           this.saveFile(savePath, line, data);
         } else {
