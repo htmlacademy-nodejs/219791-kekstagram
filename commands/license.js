@@ -7,5 +7,6 @@ module.exports = {
   description: `Shows program license`,
   execute() {
     console.log(`${packageJSON.license}`.grey);
+    process.exit(0);
   }
 };
