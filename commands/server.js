@@ -51,15 +51,16 @@ module.exports = {
     };
 
     const hostname = `127.0.0.1`;
-    const port = process.argv[3] ? process.argv[3] : 3000;
+    const port = (process.argv[3] && Number.isInteger(process.argv[3])) ? process.argv[3] : 3000;
 
-    const server = http.createServer((req, res) => {
+    const server = http.createServer();
+
+    server.on(`request`, (req, res) => {
       const localPath = url.parse(req.url).pathname;
-      const absolutePath = path.resolve(__dirname, `../static/${localPath}/`);
+      const absolutePath = path.resolve(__dirname, `../static/${(localPath === `/`) ? `/index.html` : localPath}/`);
       (async () => {
         try {
           const pathStat = await stat(absolutePath);
-          res.statusCode = 200;
           res.statusMessage = `OK`;
 
           if (pathStat.isDirectory()) {
@@ -68,7 +69,7 @@ module.exports = {
             await readFile(absolutePath, res);
           }
         } catch (e) {
-          res.writeHead(404, `Not Found`);
+          res.writeHead(404, http.STATUS_CODES[404]);
           res.end();
         }
       })().catch((e) => {
@@ -79,9 +80,8 @@ module.exports = {
       });
     });
 
-    const serverAddress = `http://${hostname}:${port}`;
     server.listen(port, hostname, () => {
-      console.log(`Server running at ${serverAddress}/`);
+      console.log(`Server running at http://${hostname}:${port}/`);
     });
   }
 };
