@@ -23,12 +23,11 @@ module.exports = {
     app.use(this.onNotFound);
     app.use(this.onError);
 
-    const hostname = `127.0.0.1`;
-    const port = Number.parseInt(process.argv[3], 10) ? Number.parseInt(process.argv[3], 10) : 3000;
-
     return app;
   },
   execute() {
+    const hostname = `127.0.0.1`;
+    const port = Number.parseInt(process.argv[3], 10) ? Number.parseInt(process.argv[3], 10) : 3000;
     this.initServer().listen(() => console.log(`Server started at: ${hostname}:${port}`));
   }
 };

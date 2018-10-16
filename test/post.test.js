@@ -38,4 +38,4 @@ describe(`GET /api/posts/:date`, () => {
     const result = response.body.find((post) => post.date === 15111111);
     assert.equal(result !== undefined, true);
   });
-})
+});
