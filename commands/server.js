@@ -27,8 +27,8 @@ module.exports = {
   },
   execute() {
     const hostname = `127.0.0.1`;
-    const port = Number.parseInt(process.argv[3], 10) ? Number.parseInt(process.argv[3], 10) : 3000;
-    this.initServer().listen(() => console.log(`Server started at: ${hostname}:${port}`));
+    const inputPort = Number.parseInt(process.argv[3], 10);
+    const port = inputPort ? inputPort : 3000;
+    this.initServer().listen(port, () => console.log(`Server started at: ${hostname}:${port}`));
   }
 };
-

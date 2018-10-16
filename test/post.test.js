@@ -15,7 +15,7 @@ describe(`GET /api/posts`, () => {
       expect(200).
       expect(`Content-Type`, /json/);
 
-    assert.equal(response.body.length, TEST_POSTS_LENGTH);
+    assert.equal(response.body.data.length, TEST_POSTS_LENGTH);
   });
   it(`get data from unknown resource`, async () => {
     return await request(app).
