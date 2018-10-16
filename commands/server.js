@@ -5,6 +5,7 @@ const posts = require(`../api/posts`);
 
 module.exports = {
   name: `server`,
+  description: `Starts server`,
   onNotFound(req, res) {
     res.status(404).send(`Page was not found`);
   },
@@ -14,7 +15,7 @@ module.exports = {
       res.status(err.code || 500).send(err.message);
     }
   },
-  execute() {
+  initServer() {
     const app = express();
 
     app.use(express.static(`${__dirname}/../static`));
@@ -25,9 +26,10 @@ module.exports = {
     const hostname = `127.0.0.1`;
     const port = Number.parseInt(process.argv[3], 10) ? Number.parseInt(process.argv[3], 10) : 3000;
 
-    app.listen(port, () => console.log(`Server started at: ${hostname}:${port}`));
-
     return app;
   },
+  execute() {
+    this.initServer().listen(() => console.log(`Server started at: ${hostname}:${port}`));
+  }
 };
 

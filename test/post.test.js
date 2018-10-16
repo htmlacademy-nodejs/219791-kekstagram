@@ -2,7 +2,7 @@
 
 const assert = require(`assert`);
 const request = require(`supertest`);
-const app = require(`../commands/server`).execute();
+const app = require(`../commands/server`).initServer();
 
 const TEST_POSTS_LENGTH = 25;
 
@@ -17,7 +17,6 @@ describe(`GET /api/posts`, () => {
 
     assert.equal(response.body.length, TEST_POSTS_LENGTH);
   });
-
   it(`get data from unknown resource`, async () => {
     return await request(app).
       get(`/api/errorTest`).
@@ -39,4 +38,4 @@ describe(`GET /api/posts/:date`, () => {
     const result = response.body.find((post) => post.date === 15111111);
     assert.equal(result !== undefined, true);
   });
-});
+})
