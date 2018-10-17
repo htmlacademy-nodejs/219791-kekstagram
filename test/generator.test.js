@@ -5,7 +5,6 @@ const generateEntity = require(`../generateEntity.js`);
 
 describe(`generateEntity`, () => {
   const entitiy = generateEntity();
-  console.log(`entitiy`, entitiy);
 
   it(`Has valid url`, () => {
     assert(entitiy.hasOwnProperty(`url`));

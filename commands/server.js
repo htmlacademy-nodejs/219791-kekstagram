@@ -1,87 +1,34 @@
 'use strict';
 
-const http = require(`http`);
-const url = require(`url`);
-const fs = require(`fs`);
-const {promisify} = require(`util`);
-
-const path = require(`path`);
-const contentTypes = {
-  'css': `text/css`,
-  'html': `text/html; charset=UTF-8`,
-  'jpg': `image/jpeg`,
-  'ico': `image/x-icon`
-};
+const express = require(`express`);
+const posts = require(`../api/posts`);
 
 module.exports = {
   name: `server`,
   description: `Starts server`,
+  onNotFound(req, res) {
+    res.status(404).send(`Page was not found`);
+  },
+  onError(err, req, res, _next) {
+    if (err) {
+      console.error(err);
+      res.status(err.code || 500).send(err.message);
+    }
+  },
+  initServer() {
+    const app = express();
+
+    app.use(express.static(`${__dirname}/../static`));
+    app.use(`/api/posts`, posts);
+    app.use(this.onNotFound);
+    app.use(this.onError);
+
+    return app;
+  },
   execute() {
-    const stat = promisify(fs.stat);
-    const readdir = promisify(fs.readdir);
-    const readfile = promisify(fs.readFile);
-
-    const printDirectory = (dirPath, relativePath, files) => {
-      return `<!DOCTYPE html>
-      <html lang="en">
-      <head>
-          <meta charset="UTF-8">
-          <title>Directory content</title>
-      </head>
-      <body>
-      <ul>
-          ${files.map((it) => `<li><a href="${relativePath}${it}/">${it}</a></li>`).join(``)}
-      </ul>
-      </body>
-      </html>`;
-    };
-
-    const readFile = async (dirPath, res) => {
-      const data = await readfile(dirPath);
-      const type = path.extname(dirPath).slice(1);
-      const header = contentTypes[type] ? contentTypes[type] : `text/plain`;
-      res.setHeader(`content-type`, header);
-      res.end(data);
-    };
-
-    const readDir = async (dirPath, relativePath, res) => {
-      const files = await readdir(dirPath);
-      res.setHeader(`content-type`, `text/html`);
-      res.end(printDirectory(dirPath, relativePath, files));
-    };
-
     const hostname = `127.0.0.1`;
-    const port = (process.argv[3] && Number.isInteger(process.argv[3])) ? process.argv[3] : 3000;
-
-    const server = http.createServer();
-
-    server.on(`request`, (req, res) => {
-      const localPath = url.parse(req.url).pathname;
-      const absolutePath = path.resolve(__dirname, `../static/${(localPath === `/`) ? `/index.html` : localPath}/`);
-      (async () => {
-        try {
-          const pathStat = await stat(absolutePath);
-          res.statusMessage = `OK`;
-
-          if (pathStat.isDirectory()) {
-            await readDir(absolutePath, localPath, res);
-          } else {
-            await readFile(absolutePath, res);
-          }
-        } catch (e) {
-          res.writeHead(404, http.STATUS_CODES[404]);
-          res.end();
-        }
-      })().catch((e) => {
-        res.writeHead(500, e.message, {
-          'content-type': `text/plain`
-        });
-        res.end(e.message);
-      });
-    });
-
-    server.listen(port, hostname, () => {
-      console.log(`Server running at http://${hostname}:${port}/`);
-    });
+    const inputPort = Number.parseInt(process.argv[3], 10);
+    const port = inputPort ? inputPort : 3000;
+    this.initServer().listen(port, () => console.log(`Server started at: ${hostname}:${port}`));
   }
 };
