@@ -3,6 +3,7 @@
 const assert = require(`assert`);
 const request = require(`supertest`);
 const app = require(`../commands/server`).initServer();
+const generator = require(`../generateEntity.js`);
 
 const TEST_POSTS_LENGTH = 25;
 
@@ -34,8 +35,34 @@ describe(`GET /api/posts/:date`, () => {
       set(`Accept`, `application/json`).
       expect(200).
       expect(`Content-Type`, /json/);
+    assert.equal(response.body.date === 15111111, true);
+  });
+});
 
-    const result = response.body.find((post) => post.date === 15111111);
-    assert.equal(result !== undefined, true);
+describe(`POST /api/posts`, () => {
+  const testPost = generator();
+
+  it(`sends post as json`, async () => {
+    const response = await request(app)
+      .post(`/api/posts`)
+      .set(`Accept`, `application/json`)
+      .set(`Content-Type`, `application/json`)
+      .send(testPost)
+      .expect(200)
+      .expect(`Content-Type`, /json/);
+
+    assert.deepEqual(testPost, response.body);
+  });
+
+  it(`sends post as form-data`, async () => {
+    const response = await request(app)
+      .post(`/api/posts`)
+      .set(`Accept`, `application/json`)
+      .set(`Content-Type`, `multipart/form-data`)
+      .field(`description`, testPost.description)
+      .expect(200)
+      .expect(`Content-Type`, /json/);
+
+    assert.equal(testPost.description, response.body.description);
   });
 });
