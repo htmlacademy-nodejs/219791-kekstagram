@@ -1,6 +1,10 @@
 'use strict';
 
 const express = require(`express`);
+const jsonParser = express.json();
+const multer = require(`multer`);
+const upload = multer({storage: multer.memoryStorage()});
+
 const generator = require(`../generateEntity.js`);
 
 const IllegalArgumentError = require(`../error/illegal-argument-error`);
@@ -9,7 +13,7 @@ const NotFoundError = require(`../error/not-found-error`);
 const postsNumber = 25;
 const posts = [];
 
-const DEFAULT = {
+const Default = {
   SKIP: 0,
   LIMIT: 25
 };
@@ -23,14 +27,15 @@ for (let i = 0; i < postsNumber; i++) {
 posts[posts.length - 1].date = 15111111;
 
 router.get(``, (req, res) => {
-  const skip = parseInt(req.query.skip, 10) || DEFAULT.SKIP;
-  const limit = parseInt(req.query.limit, 10) || DEFAULT.LIMIT;
+  const skip = parseInt(req.query.skip, 10) || Default.SKIP;
+  const limit = parseInt(req.query.limit, 10) || Default.LIMIT;
   const result = posts.slice(skip).slice(0, limit);
 
   res.send({
     "data": result,
     "skip": skip,
-    "limit": limit
+    "limit": limit,
+    "total": result.length
   });
 });
 
@@ -47,7 +52,11 @@ router.get(`/:date`, (req, res) => {
     throw new NotFoundError(`No posts dated ${dateParam}`);
   }
 
-  res.send(datedPost);
+  res.send(datedPost[0]);
+});
+
+router.post(``, jsonParser, upload.none(), (req, res) => {
+  res.send(req.body);
 });
 
 module.exports = router;
