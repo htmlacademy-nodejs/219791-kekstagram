@@ -23,16 +23,16 @@ describe(`generateEntity`, () => {
 
   it(`Has valid hashtags`, () => {
     assert(entitiy.hasOwnProperty(`hashtags`));
-    assert(Array.isArray(entitiy.hashtags));
-    assert(entitiy.hashtags.length > 0 && entitiy.hashtags.length <= 5);
-    assert(entitiy.hashtags.every((tag) => (typeof tag) === `string` && tag[0] === `#` && tag.length <= 20 && !tag.includes(` `)));
-    const tags = entitiy.hashtags.reduce((accum, tag) => {
+    const hashtags = entitiy.hashtags.split(` `);
+    assert(hashtags.length > 0 && hashtags.length <= 5);
+    assert(hashtags.every((tag) => (typeof tag) === `string` && tag[0] === `#` && tag.length <= 20 && !tag.includes(` `)));
+    const tags = hashtags.reduce((accum, tag) => {
       if (accum.indexOf(tag.slice(1).toLowerCase()) === -1) {
         accum.push(tag.slice(1).toLowerCase());
       }
       return accum;
     }, []);
-    assert(tags.length === entitiy.hashtags.length);
+    assert(tags.length === hashtags.length);
   });
 
   it(`Has valid description`, () => {

@@ -59,10 +59,36 @@ describe(`POST /api/posts`, () => {
       .post(`/api/posts`)
       .set(`Accept`, `application/json`)
       .set(`Content-Type`, `multipart/form-data`)
-      .field(`description`, testPost.description)
+      .field(`url`, testPost.url)
+      .field(`effect`, testPost.effect)
+      .field(`scale`, testPost.scale)
       .expect(200)
       .expect(`Content-Type`, /json/);
 
-    assert.equal(testPost.description, response.body.description);
+    assert.equal(testPost.url, response.body.url);
+    assert.equal(testPost.effect, response.body.effect);
+    assert.equal(testPost.scale, response.body.scale);
+  });
+
+  it(`send post as form-data with no url and get error`, async () => {
+    await request(app)
+      .post(`/api/posts`)
+      .set(`Accept`, `application/json`)
+      .set(`Content-Type`, `multipart/form-data`)
+      .field(`url`, ``)
+      .field(`effect`, testPost.effect)
+      .field(`scale`, testPost.scale)
+      .expect(400);
+  });
+
+  it(`sends post as json with incorrect scale value`, async () => {
+    testPost.scale = 101;
+
+    await request(app)
+      .post(`/api/posts`)
+      .set(`Accept`, `application/json`)
+      .set(`Content-Type`, `application/json`)
+      .send(testPost)
+      .expect(400);
   });
 });

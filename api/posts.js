@@ -5,10 +5,13 @@ const jsonParser = express.json();
 const multer = require(`multer`);
 const upload = multer({storage: multer.memoryStorage()});
 
+const validation = require(`./validation.js`);
+
 const generator = require(`../generateEntity.js`);
 
 const IllegalArgumentError = require(`../error/illegal-argument-error`);
 const NotFoundError = require(`../error/not-found-error`);
+const ValidationError = require(`../error/validation-error`);
 
 const postsNumber = 25;
 const posts = [];
@@ -56,6 +59,11 @@ router.get(`/:date`, (req, res) => {
 });
 
 router.post(``, jsonParser, upload.none(), (req, res) => {
+  const errors = validation.check(req.body);
+  console.log(`errors`, errors);
+  if (errors.length > 0) {
+    throw new ValidationError(`Incorrect fields are: ${errors.join(`, `)}`);
+  }
   res.send(req.body);
 });
 
