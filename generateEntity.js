@@ -30,7 +30,7 @@ module.exports = () => {
     for (let i = 0; i < MAX_TAGS_NUMBER; i++) {
       tags.push(`#` + getRandomWord(MIN_TAG_LENGTH, MAX_TAG_LENGTH - 1));
     }
-    return tags;
+    return tags.join(` `);
   };
 
   const getRandomDescription = () => {
