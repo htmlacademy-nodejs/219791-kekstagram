@@ -2,21 +2,24 @@
 
 const assert = require(`assert`);
 const request = require(`supertest`);
-const app = require(`../commands/server`).initServer();
+const storeMock = require(`./mock/store-mock.js`);
+const imageStoreMock = require(`./mock/imageStore-mock.js`);
+const app = require(`../commands/server`).initServer(storeMock, imageStoreMock);
+
 const generator = require(`../generateEntity.js`);
 
 const TEST_POSTS_LENGTH = 25;
 
 describe(`GET /api/posts`, () => {
   it(`resopond with json`, async () => {
-
     const response = await request(app).
       get(`/api/posts`).
       set(`Accept`, `application/json`).
       expect(200).
       expect(`Content-Type`, /json/);
 
-    assert.equal(response.body.data.length, TEST_POSTS_LENGTH);
+    const posts = response.body;
+    assert.equal(posts.data.length, TEST_POSTS_LENGTH);
   });
   it(`get data from unknown resource`, async () => {
     return await request(app).
@@ -59,6 +62,7 @@ describe(`POST /api/posts`, () => {
       .post(`/api/posts`)
       .set(`Accept`, `application/json`)
       .set(`Content-Type`, `multipart/form-data`)
+      .attach(`filename`, `static/photos/3.jpg`)
       .field(`url`, testPost.url)
       .field(`effect`, testPost.effect)
       .field(`scale`, testPost.scale)
