@@ -33,7 +33,7 @@ module.exports = {
     return Number.isInteger(scale) && scale >= 0 && scale <= 100;
   },
   correctEffect(effect) {
-    return [`none`, `chrome`, `sepia`, `marvin`, `phobos`, `heat`].indexOf(effect) !== -1;
+    return [`none`, `chrome`, `sepia`, `marvin`, `phobos`, `heat`].includes(effect);
   },
   correctTags(hashtags) {
     return typeof hashtags === `string` && this.checkSingleTag(hashtags);
