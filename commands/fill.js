@@ -20,5 +20,5 @@ module.exports = {
 
     console.log(`${POSTS_NUMBER} posts generated`);
     process.exit(0);
-  }
-};
+  }};
+  
