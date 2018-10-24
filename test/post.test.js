@@ -38,7 +38,7 @@ describe(`GET /api/posts/:date`, () => {
       set(`Accept`, `application/json`).
       expect(200).
       expect(`Content-Type`, /json/);
-    assert.equal(response.body.date === 15111111, true);
+    assert.equal(response.body[0].date === 15111111, true);
   });
 });
 

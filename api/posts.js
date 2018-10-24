@@ -11,6 +11,10 @@ const IllegalArgumentError = require(`../error/illegal-argument-error`);
 const NotFoundError = require(`../error/not-found-error`);
 const ValidationError = require(`../error/validation-error`);
 
+const defaultStore = require(`../store.js`);
+const defaultImageStore = require(`../imageStore.js`);
+
+const logger = require(`../logger`);
 
 const Default = {
   SKIP: 0,
@@ -52,7 +56,7 @@ router.get(`/:date`, asyncMiddleware(async (req, res) => {
     throw new NotFoundError(`No posts dated ${dateParam}`);
   }
 
-  res.send(datedPost[0]);
+  res.send(datedPost);
 }));
 
 router.get(`/:date/image`, asyncMiddleware(async (req, res) => {
@@ -77,10 +81,10 @@ router.get(`/:date/image`, asyncMiddleware(async (req, res) => {
   res.header(`Content-Type`, `image/jpg`);
   res.header(`Content-Length`, result.info.length);
 
-  res.on(`error`, (e) => console.error(e));
+  res.on(`error`, (e) => logger.error(e));
   res.on(`end`, () => res.end());
   const stream = result.stream;
-  stream.on(`error`, (e) => console.error(e));
+  stream.on(`error`, (e) => logger.error(e));
   stream.on(`end`, () => res.end());
   stream.pipe(res);
 }));
@@ -98,7 +102,7 @@ router.post(``, jsonParser, upload.single(`filename`), asyncMiddleware(async (re
 
 module.exports = router;
 
-module.exports = (store, imageStore) => {
+module.exports = (store = defaultStore, imageStore = defaultImageStore) => {
   router.store = store;
   router.imageStore = imageStore;
   return router;

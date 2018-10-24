@@ -1,6 +1,6 @@
 'use strict';
 
-const db = require(`../database/db`);
+const db = require(`./database/db`);
 const mongodb = require(`mongodb`);
 
 class ImageStore {

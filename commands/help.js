@@ -7,8 +7,9 @@ module.exports = {
     help: `  --help    —view help;\n`,
     version: `  --version —view app version;\n`,
     license: `  --license —view app license;\n`,
-    description: `  --description —view app description;`,
-    server: `  --server —starts server;`
+    description: `  --description —view app description;\n`,
+    server: `  --server —starts server;\n`,
+    fill: `  --fill —fills database with 50 generated objects;`
   },
   execute() {
     console.log(`Available Commands:\n`);
