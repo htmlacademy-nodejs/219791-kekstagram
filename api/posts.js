@@ -11,9 +11,6 @@ const IllegalArgumentError = require(`../error/illegal-argument-error`);
 const NotFoundError = require(`../error/not-found-error`);
 const ValidationError = require(`../error/validation-error`);
 
-const defaultStore = require(`../store.js`);
-const defaultImageStore = require(`../imageStore.js`);
-
 const logger = require(`../logger`);
 
 const Default = {
@@ -100,9 +97,7 @@ router.post(``, jsonParser, upload.single(`filename`), asyncMiddleware(async (re
   res.send(req.body);
 }));
 
-module.exports = router;
-
-module.exports = (store = defaultStore, imageStore = defaultImageStore) => {
+module.exports = (store, imageStore) => {
   router.store = store;
   router.imageStore = imageStore;
   return router;

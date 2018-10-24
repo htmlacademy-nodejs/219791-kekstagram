@@ -1,7 +1,6 @@
 'use strict';
 
 const db = require(`./database/db`);
-const logger = require(`./logger`);
 
 const setupCollection = async () => {
   const dBase = await db;
@@ -26,13 +25,18 @@ class PostsStore {
     return (await this.collection).insertOne(postData);
   }
 
+  async show() {
+    console.log(this.collection);
+  }
+
   async drop() {
     return (await this.collection).drop((err, delOK) => {
       if (err) {
         throw err;
       }
+
       if (delOK) {
-        logger.info(`"kekstagramPost" collection deleted`);
+        console.log(`"kekstagramPost" collection deleted`);
       }
 
       this.collection = setupCollection();
@@ -41,4 +45,4 @@ class PostsStore {
 }
 
 module.exports = new PostsStore(setupCollection().
-  catch((e) => logger.error(`Failed to set up "kegstagramPosts"-collection`, e)));
+  catch((e) => console.error(`Failed to set up "kegstagramPosts"-collection`, e)));
