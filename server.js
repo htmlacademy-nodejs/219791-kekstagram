@@ -33,9 +33,9 @@ module.exports = {
   initServer(posts) {
     const app = express();
 
-    app.use(express.static(`${__dirname}/../static`));
-    app.use(`/api/posts`, posts);
+    app.use(express.static(`${__dirname}/static`));
     app.use(this.onCors);
+    app.use(`/api/posts`, posts);
     app.use(this.onNotFound);
     app.use(this.onError);
 

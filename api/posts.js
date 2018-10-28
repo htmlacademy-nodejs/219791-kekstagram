@@ -4,6 +4,7 @@ const express = require(`express`);
 const jsonParser = express.json();
 const multer = require(`multer`);
 const upload = multer({storage: multer.memoryStorage()});
+const toStream = require(`buffer-to-stream`);
 
 const validation = require(`./validation.js`);
 
@@ -87,14 +88,21 @@ router.get(`/:date/image`, asyncMiddleware(async (req, res) => {
 }));
 
 router.post(``, jsonParser, upload.single(`filename`), asyncMiddleware(async (req, res) => {
-  const errors = validation.check(req.body);
+  const fileName = req.file && req.file.buffer;
+  const body = req.body;
+  body.date = body.date ? body.date : Date.now();
+  body.url = fileName ? `/api/posts/${body.date}/image` : false;
+
+  const errors = validation.check(body, fileName);
 
   if (errors.length > 0) {
     throw new ValidationError(`Incorrect fields are: ${errors.join(`, `)}`);
   }
 
-  router.store.save(req.body);
-  res.send(req.body);
+  const result = await router.store.save(body);
+  await router.imageStore.save(result.insertedId, toStream(fileName));
+
+  res.send(body);
 }));
 
 module.exports = (store, imageStore) => {

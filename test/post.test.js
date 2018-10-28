@@ -30,7 +30,6 @@ describe(`GET /api/posts`, () => {
       expect(`Page was not found`).
       expect(`Content-Type`, /html/);
   });
-
 });
 
 describe(`GET /api/posts/:date`, () => {
@@ -47,31 +46,17 @@ describe(`GET /api/posts/:date`, () => {
 describe(`POST /api/posts`, () => {
   const testPost = generator();
 
-  it(`sends post as json`, async () => {
-    const response = await request(app)
-      .post(`/api/posts`)
-      .set(`Accept`, `application/json`)
-      .set(`Content-Type`, `application/json`)
-      .send(testPost)
-      .expect(200)
-      .expect(`Content-Type`, /json/);
-
-    assert.deepEqual(testPost, response.body);
-  });
-
   it(`sends post as form-data`, async () => {
     const response = await request(app)
       .post(`/api/posts`)
-      .set(`Accept`, `application/json`)
-      .set(`Content-Type`, `multipart/form-data`)
-      .attach(`filename`, `static/photos/3.jpg`)
-      .field(`url`, testPost.url)
-      .field(`effect`, testPost.effect)
-      .field(`scale`, testPost.scale)
-      .expect(200)
-      .expect(`Content-Type`, /json/);
 
-    assert.equal(testPost.url, response.body.url);
+      .attach(`filename`, `./static/photos/25.jpg`)
+      .field(`url`, testPost.url)
+      .field(`scale`, testPost.scale)
+      .field(`effect`, testPost.effect)
+      .set(`Content-Type`, `multipart/form-data`)
+      .expect(200);
+
     assert.equal(testPost.effect, response.body.effect);
     assert.equal(testPost.scale, response.body.scale);
   });

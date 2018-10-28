@@ -17,6 +17,7 @@ class PostsStoreMock {
   }
 
   async save() {
+    return {insertedId: 999};
   }
 }
 

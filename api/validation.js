@@ -1,11 +1,13 @@
 'use strict';
 
+const fileType = require(`file-type`);
+
 module.exports = {
-  check(message) {
+  check(message, file) {
     const errors = [];
 
-    if (!message.url || !this.correctFile(message.url)) {
-      errors.push(`fileName`);
+    if (!message.url || !this.correctFile(file)) {
+      errors.push(`url`);
     }
 
     if (!message.scale || !this.correctScale(Number.parseInt(message.scale, 10))) {
@@ -26,8 +28,8 @@ module.exports = {
 
     return errors;
   },
-  correctFile() {
-    return true;
+  correctFile(file) {
+    return [`image/jpg`, `image/png`, `image/jpeg`].includes(fileType(file).mime);
   },
   correctScale(scale) {
     return Number.isInteger(scale) && scale >= 0 && scale <= 100;

@@ -2,11 +2,11 @@
 
 const generator = require(`../generateEntity.js`);
 const store = require(`../store.js`);
-const POSTS_NUMBER = 50;
+const POSTS_NUMBER = 25;
 
 module.exports = {
   name: `fill`,
-  description: `Fills database with 50 generated objects`,
+  description: `Fills database with 25 generated objects`,
   async execute() {
     await store.drop();
 
