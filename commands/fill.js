@@ -1,12 +1,13 @@
 'use strict';
 
-const generator = require(`../generateEntity.js`);
+const generator = require(`../generate-entity.js`);
 const store = require(`../store.js`);
+
 const POSTS_NUMBER = 25;
 
 module.exports = {
   name: `fill`,
-  description: `Fills database with 25 generated objects`,
+  description: `Fills database with ${POSTS_NUMBER} generated objects`,
   async execute() {
     await store.drop();
 

@@ -3,15 +3,16 @@
 const assert = require(`assert`);
 const request = require(`supertest`);
 const storeMock = require(`./mock/store-mock.js`);
-const imageStoreMock = require(`./mock/imageStore-mock.js`);
+const imageStoreMock = require(`./mock/image-store-mock.js`);
 const posts = require(`../api/posts`)(storeMock, imageStoreMock);
 const app = require(`../server`).initServer(posts);
 
-const generator = require(`../generateEntity.js`);
+const generator = require(`../generate-entity.js`);
 
 const TEST_POSTS_LENGTH = 25;
 
 describe(`GET /api/posts`, () => {
+
   it(`resopond with json`, async () => {
     const response = await request(app).
       get(`/api/posts`).
@@ -39,6 +40,7 @@ describe(`GET /api/posts/:date`, () => {
       set(`Accept`, `application/json`).
       expect(200).
       expect(`Content-Type`, /json/);
+
     assert.equal(response.body[0].date === 15111111, true);
   });
 });

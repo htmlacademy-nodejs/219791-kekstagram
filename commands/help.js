@@ -9,7 +9,7 @@ module.exports = {
     license: `  --license —view app license;\n`,
     description: `  --description —view app description;\n`,
     server: `  --server —starts server;\n`,
-    fill: `  --fill —fills database with 25 generated objects;`
+    fill: `  --fill —fills database with 25 generated objects;\n`
   },
   execute() {
     console.log(`Available Commands:\n`);

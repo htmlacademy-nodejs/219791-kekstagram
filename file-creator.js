@@ -1,7 +1,7 @@
 'use strict';
 
 const readline = require(`readline`);
-const generator = require(`./generateEntity.js`);
+const generator = require(`./generate-entity.js`);
 
 const fs = require(`fs`);
 const path = require(`path`);

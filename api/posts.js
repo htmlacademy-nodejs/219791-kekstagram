@@ -23,7 +23,7 @@ const Default = {
 const router = express.Router();
 
 const toPage = async (cursor, skip, limit) => {
-  const packet = await cursor.skip(skip).limit(limit).toArray();
+  const packet = await cursor.skip(parseInt(skip, 10)).limit(parseInt(limit, 10)).toArray();
   return {
     data: packet,
     skip,
@@ -35,10 +35,14 @@ const toPage = async (cursor, skip, limit) => {
 const asyncMiddleware = (fn) => (req, res, next) => fn(req, res, next).catch(next);
 
 router.get(``, asyncMiddleware(async (req, res) => {
-  const skip = parseInt(req.query.skip, 10) || Default.SKIP;
-  const limit = parseInt(req.query.limit, 10) || Default.LIMIT;
+  const skip = parseInt(req.query.skip, 10);
+  const limit = parseInt(req.query.limit, 10);
 
-  res.send(await toPage(await router.store.getAllPosts(), skip, limit));
+  if ((req.query.skip && isNaN(skip)) || (req.query.limit && isNaN(limit))) {
+    throw new NotFoundError(`skip and limit params must be integers`);
+  }
+
+  res.send(await toPage(await router.store.getAllPosts(), skip || Default.SKIP, limit || Default.LIMIT));
 }));
 
 router.get(`/:date`, asyncMiddleware(async (req, res) => {
@@ -76,7 +80,7 @@ router.get(`/:date/image`, asyncMiddleware(async (req, res) => {
     throw new NotFoundError(`No image for post dated ${dateParam}`);
   }
 
-  res.header(`Content-Type`, `image/jpg`);
+  res.header(`Content-Type`, `image/jpeg`);
   res.header(`Content-Length`, result.info.length);
 
   res.on(`error`, (e) => logger.error(e));

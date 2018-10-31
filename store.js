@@ -25,10 +25,6 @@ class PostsStore {
     return (await this.collection).insertOne(postData);
   }
 
-  async show() {
-    console.log(this.collection);
-  }
-
   async drop() {
     return (await this.collection).drop((err, delOK) => {
       if (err) {

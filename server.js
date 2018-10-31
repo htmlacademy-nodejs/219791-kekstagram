@@ -2,6 +2,7 @@
 
 const ValidationError = require(`./error/validation-error`);
 const MongoError = require(`mongodb`).MongoError;
+const NotImplementedError = require(`./error/not-implemented-error`);
 
 const express = require(`express`);
 const logger = require(`./logger`);
@@ -30,12 +31,20 @@ module.exports = {
     });
     next();
   },
+  notImplemented(req, res, next) {
+    if (req.method === `GET` || req.method === `POST`) {
+      next();
+    } else {
+      throw new NotImplementedError(`Method not implemented`);
+    }
+  },
   initServer(posts) {
     const app = express();
 
     app.use(express.static(`${__dirname}/static`));
     app.use(this.onCors);
     app.use(`/api/posts`, posts);
+    app.use(this.notImplemented);
     app.use(this.onNotFound);
     app.use(this.onError);
 

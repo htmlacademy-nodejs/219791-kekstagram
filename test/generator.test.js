@@ -1,7 +1,7 @@
 'use strict';
 
 const assert = require(`assert`);
-const generateEntity = require(`../generateEntity.js`);
+const generateEntity = require(`../generate-entity.js`);
 
 describe(`generateEntity`, () => {
   const entitiy = generateEntity();

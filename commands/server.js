@@ -1,7 +1,7 @@
 'use strict';
 
 const defaultStore = require(`../store.js`);
-const defaultImageStore = require(`../imageStore.js`);
+const defaultImageStore = require(`../image-store.js`);
 
 const posts = require(`../api/posts`)(defaultStore, defaultImageStore);
 const server = require(`../server`);
