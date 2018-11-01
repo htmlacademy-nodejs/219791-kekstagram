@@ -1,7 +1,7 @@
 'use strict';
 
 const Cursor = require(`./cursor-mock`);
-const generator = require(`../../generateEntity.js`);
+const generator = require(`../../generate-entity.js`);
 
 class PostsStoreMock {
   constructor(data) {
@@ -17,9 +17,7 @@ class PostsStoreMock {
   }
 
   async save() {
-    return {
-      insertedId: 42
-    };
+    return {insertedId: 999};
   }
 }
 

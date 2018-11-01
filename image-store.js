@@ -1,6 +1,6 @@
 'use strict';
 
-const db = require(`../database/db`);
+const db = require(`./database/db`);
 const mongodb = require(`mongodb`);
 
 class ImageStore {
@@ -35,7 +35,6 @@ class ImageStore {
       stream.pipe(bucket.openUploadStream(filename)).on(`error`, fail).on(`finish`, success);
     });
   }
-
 }
 
 module.exports = new ImageStore();

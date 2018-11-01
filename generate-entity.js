@@ -1,19 +1,23 @@
 'use strict';
 
+const WEEK = 7 * 24 * 60 * 60 * 1000;
+
+const tagsLims = {
+  MIN_LENGTH: 2,
+  MAX_LENGTH: 20,
+  MAX_NUMBER: 5
+};
+
+const MAX_TEXT_LENGTH = 140;
+
+const wordLims = {
+  MIN_LENGTH: 3,
+  MAX_LENGTH: 20
+};
+
+const MAX_COMMENTS_NUMBER = 10;
+
 module.exports = () => {
-  const WEEK = 7 * 24 * 60 * 60 * 1000;
-
-  const MIN_TAG_LENGTH = 2;
-  const MAX_TAG_LENGTH = 20;
-  const MAX_TAGS_NUMBER = 5;
-
-  const MIN_WORD_LENGTH = 3;
-  const MAX_WORD_LENGTH = 20;
-
-  const MAX_TEXT_LENGTH = 140;
-
-  const MAX_COMMENTS_NUMBER = 10;
-
   const possibleEffects = [`none`, `chrome`, `sepia`, `marvin`, `phobos`, `heat`];
   const getRandom = (min, max) => Math.round(min - 0.5 + Math.random() * (max - min + 1));
   const getRandomChar = () => String.fromCharCode(getRandom(97, 122));
@@ -27,8 +31,8 @@ module.exports = () => {
 
   const getRandomTags = () => {
     let tags = [];
-    for (let i = 0; i < MAX_TAGS_NUMBER; i++) {
-      tags.push(`#` + getRandomWord(MIN_TAG_LENGTH, MAX_TAG_LENGTH - 1));
+    for (let i = 0; i < tagsLims.MAX_NUMBER; i++) {
+      tags.push(`#` + getRandomWord(tagsLims.MIN_LENGTH, tagsLims.MAX_LENGTH - 1));
     }
     return tags.join(` `);
   };
@@ -39,7 +43,7 @@ module.exports = () => {
     let word = ` `;
     while ((description.length + word.length) <= maxLength) {
       description += word;
-      word = ` ` + getRandomWord(MIN_WORD_LENGTH, MAX_WORD_LENGTH);
+      word = ` ` + getRandomWord(wordLims.MIN_LENGTH, wordLims.MAX_LENGTH);
     }
     return description;
   };

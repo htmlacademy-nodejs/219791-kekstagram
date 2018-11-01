@@ -5,9 +5,7 @@ const db = require(`./database/db`);
 const setupCollection = async () => {
   const dBase = await db;
 
-  const collection = dBase.collection(`kekstagramPost`);
-  collection.createIndex({name: -1}, {unique: true});
-  return collection;
+  return dBase.collection(`kekstagramPost`);
 };
 
 class PostsStore {
@@ -25,6 +23,20 @@ class PostsStore {
 
   async save(postData) {
     return (await this.collection).insertOne(postData);
+  }
+
+  async drop() {
+    return (await this.collection).drop((err, delOK) => {
+      if (err) {
+        throw err;
+      }
+
+      if (delOK) {
+        console.log(`"kekstagramPost" collection deleted`);
+      }
+
+      this.collection = setupCollection();
+    });
   }
 }
 

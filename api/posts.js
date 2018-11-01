@@ -4,6 +4,7 @@ const express = require(`express`);
 const jsonParser = express.json();
 const multer = require(`multer`);
 const upload = multer({storage: multer.memoryStorage()});
+const toStream = require(`buffer-to-stream`);
 
 const validation = require(`./validation.js`);
 
@@ -11,6 +12,7 @@ const IllegalArgumentError = require(`../error/illegal-argument-error`);
 const NotFoundError = require(`../error/not-found-error`);
 const ValidationError = require(`../error/validation-error`);
 
+const logger = require(`../logger`);
 
 const Default = {
   SKIP: 0,
@@ -21,7 +23,7 @@ const Default = {
 const router = express.Router();
 
 const toPage = async (cursor, skip, limit) => {
-  const packet = await cursor.skip(skip).limit(limit).toArray();
+  const packet = await cursor.skip(parseInt(skip, 10)).limit(parseInt(limit, 10)).toArray();
   return {
     data: packet,
     skip,
@@ -33,10 +35,14 @@ const toPage = async (cursor, skip, limit) => {
 const asyncMiddleware = (fn) => (req, res, next) => fn(req, res, next).catch(next);
 
 router.get(``, asyncMiddleware(async (req, res) => {
-  const skip = parseInt(req.query.skip, 10) || Default.SKIP;
-  const limit = parseInt(req.query.limit, 10) || Default.LIMIT;
+  const skip = parseInt(req.query.skip, 10);
+  const limit = parseInt(req.query.limit, 10);
 
-  res.send(await toPage(await router.store.getAllPosts(), skip, limit));
+  if ((req.query.skip && isNaN(skip)) || (req.query.limit && isNaN(limit))) {
+    throw new NotFoundError(`skip and limit params must be integers`);
+  }
+
+  res.send(await toPage(await router.store.getAllPosts(), skip || Default.SKIP, limit || Default.LIMIT));
 }));
 
 router.get(`/:date`, asyncMiddleware(async (req, res) => {
@@ -52,7 +58,7 @@ router.get(`/:date`, asyncMiddleware(async (req, res) => {
     throw new NotFoundError(`No posts dated ${dateParam}`);
   }
 
-  res.send(datedPost[0]);
+  res.send(datedPost);
 }));
 
 router.get(`/:date/image`, asyncMiddleware(async (req, res) => {
@@ -74,29 +80,34 @@ router.get(`/:date/image`, asyncMiddleware(async (req, res) => {
     throw new NotFoundError(`No image for post dated ${dateParam}`);
   }
 
-  res.header(`Content-Type`, `image/jpg`);
+  res.header(`Content-Type`, `image/jpeg`);
   res.header(`Content-Length`, result.info.length);
 
-  res.on(`error`, (e) => console.error(e));
+  res.on(`error`, (e) => logger.error(e));
   res.on(`end`, () => res.end());
   const stream = result.stream;
-  stream.on(`error`, (e) => console.error(e));
+  stream.on(`error`, (e) => logger.error(e));
   stream.on(`end`, () => res.end());
   stream.pipe(res);
 }));
 
 router.post(``, jsonParser, upload.single(`filename`), asyncMiddleware(async (req, res) => {
-  const errors = validation.check(req.body);
+  const fileName = req.file && req.file.buffer;
+  const body = req.body;
+  body.date = body.date ? body.date : Date.now();
+  body.url = fileName ? `/api/posts/${body.date}/image` : false;
+
+  const errors = validation.check(body, fileName);
 
   if (errors.length > 0) {
     throw new ValidationError(`Incorrect fields are: ${errors.join(`, `)}`);
   }
 
-  router.store.save(req.body);
-  res.send(req.body);
-}));
+  const result = await router.store.save(body);
+  await router.imageStore.save(result.insertedId, toStream(fileName));
 
-module.exports = router;
+  res.send(body);
+}));
 
 module.exports = (store, imageStore) => {
   router.store = store;
