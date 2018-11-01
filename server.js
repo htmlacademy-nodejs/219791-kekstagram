@@ -32,7 +32,8 @@ module.exports = {
     next();
   },
   notImplemented(req, res, next) {
-    if (req.method === `GET` || req.method === `POST`) {
+    const allowedMethods = [`GET`, `POST`];
+    if (allowedMethods.includes(req.method)) {
       next();
     } else {
       throw new NotImplementedError(`Method not implemented`);
